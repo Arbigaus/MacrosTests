@@ -20,20 +20,21 @@ let sinkifyMacrosTests: [String: Macro.Type] = [
 final class SinkifyMacroTests: XCTestCase {
     func testMacro() throws {
         let inputSource = """
-            #sinkify(store: &trash) { banana in
+            #sinkify(self.$banana, in: &trash) { banana in
                 print(banana)
             }
             """
 
         let expected = """
-            .sink { [weak self] banana in
-                guard let self = self else {
-                    return
-                }
+            self.$banana
+                .sink { [weak self] banana in
+                    guard let self = self else {
+                        return
+                    }
 
                 print(banana)
-            }
-            .store(in: &trash)
+                }
+                .store(in: &trash)
             """
         assertMacroExpansion(
             inputSource,

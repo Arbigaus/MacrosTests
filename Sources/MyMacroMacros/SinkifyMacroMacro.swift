@@ -15,8 +15,10 @@ public struct SinkifyMacroMacro: ExpressionMacro {
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext
     ) throws -> ExprSyntax {
-        guard let store = node.arguments.first?.expression.description else {
-            fatalError("Expected the cancellable param")
+        guard node.arguments.count == 2,
+              let publisher = node.arguments.first?.expression.description,
+              let store = node.arguments.last?.expression.description else {
+            fatalError("Expected the publisher and the store parameters")
         }
 
         guard let closure = node.trailingClosure?.statements.first?.item,
@@ -25,13 +27,12 @@ public struct SinkifyMacroMacro: ExpressionMacro {
         }
 
         let generated = """
-            .sink { [weak self] \(param)in
-                guard let self = self else {
-                    return
+            \(publisher)
+                .sink { [weak self] \(param)in
+                    guard let self = self else { return }
+                    \(closure.description)
                 }
-                \(closure.description)
-            }
-            .store(in: \(store))
+                .store(in: \(store))
             """
 
         return ExprSyntax(stringLiteral: generated)
