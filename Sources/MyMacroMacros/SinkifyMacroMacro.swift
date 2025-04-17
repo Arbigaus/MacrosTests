@@ -32,16 +32,9 @@ public struct SinkifyMacroMacro: ExpressionMacro {
                     guard let self = self else { return }
                     \(closure.description)
                 }
-                .store(in: \(store))
+                .store(in: &\(store))
             """
 
         return ExprSyntax(stringLiteral: generated)
     }
 }
-
-/*
- •• •sink { [weak self]•/*Any•Argument*/•in-
- •• • guard let self else {• return }-
- •••• • • f • Any code • }-
- ••}. store(in: &cancellables)-
- */

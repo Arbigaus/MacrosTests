@@ -9,7 +9,6 @@ import Combine
 
 /// A macro that produces a sink to a Publisher variable
 /// For example:
-///
 ///     #sinkify($foo, in: &fubar) { bar in
 ///         self.baz(item)
 ///     }
@@ -25,7 +24,7 @@ import Combine
 @freestanding(expression)
 public macro sinkify<Upstream: Publisher>(
     _ publisher: Upstream,
-    in cancellables: inout Set<AnyCancellable>,
+    in cancellables: Set<AnyCancellable>,
     _ body: @escaping (Upstream.Output) -> Void
 ) -> Void = #externalMacro(
     module: "MyMacroMacros",

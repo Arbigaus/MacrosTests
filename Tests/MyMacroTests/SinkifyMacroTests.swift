@@ -20,7 +20,7 @@ let sinkifyMacrosTests: [String: Macro.Type] = [
 final class SinkifyMacroTests: XCTestCase {
     func testMacro() throws {
         let inputSource = """
-            #sinkify(self.$banana, in: &trash) { banana in
+            #sinkify(self.$banana, in: trash) { banana in
                 print(banana)
             }
             """
